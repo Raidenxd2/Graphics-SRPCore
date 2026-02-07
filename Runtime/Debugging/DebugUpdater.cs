@@ -23,7 +23,7 @@ namespace UnityEngine.Rendering
         static void RuntimeInit()
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            if (DebugManager.instance.enableRuntimeUI)
+            if (DebugManager.instance.enableRuntimeUI && Environment.CommandLine.Contains("-urp-debugui", StringComparison.CurrentCultureIgnoreCase))
                 EnableRuntime();
 #endif
         }
