@@ -1,3 +1,6 @@
 {
-    "name": "Unity.RenderPipelines.Core.ShaderLibrary"
+    "name": "Unity.RenderPipelines.Core.ShaderLibrary",
+    "includePlatforms": [
+        "Editor"
+    ]
 }
