@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace UnityEngine.Rendering
 {
