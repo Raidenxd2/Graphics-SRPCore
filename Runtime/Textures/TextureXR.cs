@@ -127,6 +127,11 @@ namespace UnityEngine.Rendering
         public static RTHandle GetWhiteTexture() { return useTexArray ? m_WhiteTexture2DArrayRTH : m_WhiteTextureRTH; }
 
         /// <summary>
+        /// Is TextureXR initialized?
+        /// </summary>
+        public static bool initialized => m_BlackUIntTexture2DArray != null; // We assume that everything is valid if one is valid.
+
+        /// <summary>
         /// Initialize XR textures. Must be called at least once.
         /// </summary>
         /// <param name="cmd">Command Buffer used to initialize textures.</param>

@@ -205,5 +205,25 @@ namespace UnityEngine.Rendering
         {
             return m_owner.GetFrameRT(id, 0);
         }
+
+        /// <summary>
+        /// Returns the id stable index from the previous frame.
+        /// </summary>
+        /// <param name="id">Id for the history RTHandle storage.</param>
+        /// <returns>The stable index from previous frame.</returns>
+        protected int GetPreviousFrameRTStableIndex(int id)
+        {
+            return m_owner.GetFrameRTStableIndex(id, 1);
+        }
+
+        /// <summary>
+        /// Returns the id stable index of the current frame.
+        /// </summary>
+        /// <param name="id">Id for the history RTHandle storage.</param>
+        /// <returns>The stable index of the current frame.</returns>
+        protected int GetCurrentFrameRTStableIndex(int id)
+        {
+            return m_owner.GetFrameRTStableIndex(id, 0);
+        }
     }
 }

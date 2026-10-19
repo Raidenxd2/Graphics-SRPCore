@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace UnityEngine.Rendering
 {
@@ -47,6 +48,14 @@ namespace UnityEngine.Rendering
     /// </example>
     public class BufferedRTHandleSystem : IDisposable
     {
+        struct RTEntry
+        {
+            public RTHandle handle;
+            public int stableIndex;
+        }
+
+        Dictionary<int, RTEntry[]> m_RTEntries = new Dictionary<int, RTEntry[]>();
+
         Dictionary<int, RTHandle[]> m_RTHandles = new Dictionary<int, RTHandle[]>();
 
         RTHandleSystem m_RTHandleSystem = new RTHandleSystem();
@@ -65,6 +74,21 @@ namespace UnityEngine.Rendering
         /// </summary>
         public RTHandleProperties rtHandleProperties { get { return m_RTHandleSystem.rtHandleProperties; } }
 
+        bool TryGetFrameRenderTarget(int bufferId, int frameIndex, out RTEntry rt)
+        {
+            if (!m_RTEntries.ContainsKey(bufferId))
+            {
+                rt.handle = null;
+                rt.stableIndex = -1;
+                return false;
+            }
+
+            Assert.IsTrue(frameIndex >= 0 && frameIndex < m_RTEntries[bufferId].Length);
+
+            rt = m_RTEntries[bufferId][frameIndex];
+            return true;
+        }
+
         /// <summary>
         /// Return the frame RT or null.
         /// </summary>
@@ -79,6 +103,21 @@ namespace UnityEngine.Rendering
             Assert.IsTrue(frameIndex >= 0 && frameIndex < m_RTHandles[bufferId].Length);
 
             return m_RTHandles[bufferId][frameIndex];
+        }
+
+        /// <summary>
+        /// Return the frame RT's stable index or -1.
+        /// A stable index can be used to index into an array of user data assigned to each RT.
+        /// </summary>
+        /// <param name="bufferId">Defines the buffer to use.</param>
+        /// <param name="frameIndex">Defines which frame to access within the buffer.</param>
+        /// <returns>The frame RT stable index or -1 when the <paramref name="bufferId"/> was not previously allocated (<see cref="BufferedRTHandleSystem.AllocBuffer(int, Func{RTHandleSystem, int, RTHandle}, int)" />).</returns>
+        public int GetFrameRTStableIndex(int bufferId, int frameIndex)
+        {
+            if (TryGetFrameRenderTarget(bufferId, frameIndex, out var rt))
+                return rt.stableIndex;
+
+            return -1;
         }
 
         /// <summary>
